@@ -9,7 +9,8 @@ ENV FOREMAN_DOMAIN=example.com
 RUN \
   dnf upgrade -y && \
   dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
-  dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname qpid-proton-c && \
+  dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
+  rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-0.37.0-1.el8.x86_64.rpm && \
   dnf clean all
 
 ARG HOME=/home/foreman
@@ -31,8 +32,9 @@ ENV BUNDLER_SKIPPED_GROUPS="test test development openid libvirt journald facter
 RUN \
   dnf install -y redhat-rpm-config git \
     gcc-c++ make bzip2 gettext tar \
-    libxml2-devel libcurl-devel ruby-devel gpid-proton-c-devel \
+    libxml2-devel libcurl-devel ruby-devel \
     postgresql-devel && \
+  rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-devel-0.37.0-1.el8.x86_64.rpm && \
   dnf clean all
 
 ENV DATABASE_URL=nulldb://nohost
