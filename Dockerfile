@@ -1,7 +1,7 @@
 FROM quay.io/centos/centos:stream8 as base
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="12"
-ARG FOREMAN_VERSION="develop"
+ARG FOREMAN_VERSION
 
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
@@ -26,8 +26,7 @@ FROM base as builder
 
 ENV RAILS_ENV=production
 ENV FOREMAN_APIPIE_LANGS=en
-ENV BUNDLER_SKIPPED_GROUPS="test test development openid libvirt journald facter
-    console"
+ENV BUNDLER_SKIPPED_GROUPS="test test development openid libvirt journald facter console"
 
 RUN \
   dnf install -y redhat-rpm-config git \
