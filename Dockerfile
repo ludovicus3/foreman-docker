@@ -90,9 +90,9 @@ USER 1001
 WORKDIR ${HOME}
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
 RUN \
-  ln -s /etc/foreman/database.yml config/database.yml && \
-  ln -s /etc/foreman/settings.yml config/settings.yml && \
-  ln -s /etc/foreman/plugins config/settings.plugins.d && \
+  ln -s /etc/foreman/database.yml ${HOME}/config/database.yml && \
+  ln -s /etc/foreman/settings.yml ${HOME}/config/settings.yml && \
+  ln -s /etc/foreman/plugins ${HOME}/config/settings.plugins.d && \
 
 RUN date -u > BUILD_TIME
 
