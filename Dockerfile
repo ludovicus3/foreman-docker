@@ -43,7 +43,8 @@ USER 1001
 WORKDIR $HOME
 
 RUN git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
-ADD bundler.d bundler.d/
+
+COPY --chown=1001:0 bundler.d bundler.d/
 
 RUN \
   bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
@@ -83,7 +84,7 @@ ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
 
-USER 0
+USER 1001
 WORKDIR ${HOME}
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
 RUN \
