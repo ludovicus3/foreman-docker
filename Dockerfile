@@ -42,7 +42,9 @@ ARG HOME=/home/foreman
 USER 1001
 WORKDIR $HOME
 
-RUN git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
+RUN \
+  echo "Cloning from ${FOREMAN_VERSION}..." && \
+  git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
 
 COPY --chown=1001:0 bundler.d bundler.d/
 
