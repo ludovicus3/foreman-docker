@@ -12,6 +12,7 @@ case "$@" in
     bundle exec sidekiq -e ${RAILS_ENV} -r ${DYNFLOW_SIDEKIQ_SCRIPT} -c 1 -q ${DYNFLOW_QUEUE}
     ;;
   "foreman")
+    bundle exec bin/rake db:migrate
     bundle exec bin/rails server
     ;;
   *)

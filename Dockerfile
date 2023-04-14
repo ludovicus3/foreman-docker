@@ -94,6 +94,10 @@ ENV RAILS_LOG_TO_STDOUT=true
 USER 1001
 WORKDIR ${HOME}
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
+RUN \
+  ln -sf /etc/foreman/database.yml ${HOME}/config/database.yml && \
+  ln -sf /etc/foreman/settings.yaml ${HOME}/config/settings.yaml && \
+  ln -sf /etc/foreman/plugins ${HOME}/config/settings.plugins.d && \
 
 RUN date -u > BUILD_TIME
 
