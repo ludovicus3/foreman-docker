@@ -21,6 +21,10 @@ RUN \
   chown -R 1001:0 $HOME && \
   chmod -R g=u $HOME
 
+COPY entrypoint.sh /usr/bin/
+RUN chmod +x /usr/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
+
 FROM base as builder
 
 ARG FOREMAN_VERSION="develop"
@@ -96,7 +100,7 @@ RUN \
 
 RUN date -u > BUILD_TIME
 
-CMD bundle exec bin/rails server
+CMD foreman
 
 EXPOSE 3000/tcp
 EXPOSE 5910-5930/tcp 
