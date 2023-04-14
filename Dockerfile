@@ -9,6 +9,7 @@ RUN \
   dnf upgrade -y && \
   dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname && \
+  rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8 && \
   rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-0.37.0-1.el8.x86_64.rpm && \
   dnf clean all
 
