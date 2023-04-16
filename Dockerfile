@@ -97,7 +97,7 @@ COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
 RUN \
   ln -sf /etc/foreman/database.yml ${HOME}/config/database.yml && \
   ln -sf /etc/foreman/settings.yaml ${HOME}/config/settings.yaml && \
-  ln -sf /etc/foreman/plugins ${HOME}/config/settings.plugins.d && \
+  ln -sf /etc/foreman/plugins ${HOME}/config/settings.plugins.d 
 
 RUN date -u > BUILD_TIME
 
