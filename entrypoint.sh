@@ -3,6 +3,7 @@ set -e
 
 export PATH=~/bin:${GEM_HOME}/bin:${PATH}
 export DYNFLOW_SIDEKIQ_SCRIPT=/home/foreman/extras/dynflow-sidekiq.rb
+export BIND_HOST=0.0.0.0
 
 case "$@" in
   "orchestrator")
@@ -13,7 +14,8 @@ case "$@" in
     ;;
   "foreman")
     bundle exec bin/rake db:migrate
-    bundle exec bin/rails server
+    bundle exec bin/rake db:seed
+    bundle exec bin/rails server -b ${BIND_HOST}
     ;;
   *)
     exec $@
