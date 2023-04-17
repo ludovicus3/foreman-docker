@@ -1,0 +1,9 @@
+#!/bin/bash
+
+export DYNFLOW_SIDEKIQ_SCRIPT=${DYNFLOW_SIDEKIQ_SCRIPT:-/home/foreman/extras/dynflow-sidekiq.rb}
+export RAILS_ENV=${RAILS_ENV:-production}
+export CONCURRENCY=${CONCURRENCY:-1}
+export DYNFLOW_SIDEKIQ_QUEUE=${DYNFLOW_SIDEKIQ_QUEUE:-default}
+
+bundle exec sidekiq -r ${DYNFLOW_SIDEKIQ_SCRIPT} -e ${RAILS_ENV} -c ${CONCURRENCY} -q ${DYNFLOW_SIDEKIQ_QUEUE}
+

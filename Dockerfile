@@ -23,7 +23,9 @@ RUN \
   chmod -R g=u $HOME
 
 COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
+COPY foreman /usr/bin/
+COPY dynflow /usr/bin/
+RUN chmod +x /usr/bin/*
 ENTRYPOINT ["entrypoint.sh"]
 
 FROM base as builder
@@ -68,7 +70,7 @@ RUN \
 RUN \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
-  bundle exec rake assets:clean assets:precompile
+  bundle exec rake assets:clean assets:precompile apipie:cache:index
 
 RUN \
   npm install --no-optional && \

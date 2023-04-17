@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export BIND_IP=${BIND_IP:-0.0.0.0}
+
+bundle exec bin/rails server --binding=${BIND_IP} --environment=${FOREMAN_ENV}
+
