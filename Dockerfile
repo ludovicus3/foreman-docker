@@ -68,8 +68,8 @@ RUN \
     #  file may be overwritten by a mounted file at runtime
     cp /etc/gitconfig /home/user/.gitconfig && \
     # Set permissions on /etc/passwd and /home to allow arbitrary users to write
-    chgrp -R 0 /home && \
-    chmod -R g=u /etc/passwd /etc/group /home && \
+    chgrp -R 0 /home ${FOREMAN} && \
+    chmod -R g=u /etc/passwd /etc/group /home ${FOREMAN} && \
     chmod +x /entrypoint.sh
 
 USER 10001
