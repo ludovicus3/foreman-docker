@@ -14,14 +14,14 @@ RUN \
   rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-devel-0.37.0-1.el8.x86_64.rpm && \
   dnf clean all
 
-ARG HOME=/home/foreman
-WORKDIR $HOME
+ARG FOREMAN=/foreman
+WORKDIR $FOREMAN
 
 RUN \
   groupadd -r foreman -f -g 0 && \
-  useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin -c "Foreman Application User" foreman && \
-  chown -R 1001:0 $HOME && \
-  chmod -R g=u $HOME
+  useradd -u 1001 -r -g foreman -d $FOREMAN -s /sbin/nologin -c "Foreman Application User" foreman && \
+  chown -R 1001:0 $FOREMAN && \
+  chmod -R g=u $FOREMAN
 
 ARG FOREMAN_VERSION="develop"
 
@@ -57,9 +57,19 @@ RUN \
   npm run analyze
 
 USER 0
+COPY --chown=0:0 entrypoint.sh /
+
 RUN \
-  chgrp -R 0 ${HOME} && \
-  chmod -R g=u ${HOME}
+  useradd -u 10001 -G wheel,root -d /home/user --shell /bin/bash -m user && \
+  echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1) @\"\`$ '" >> /home/user/.bashrc && \
+  cp /etc/gitconfig /home/user/.gitconfig && \
+  chgrp -R 0 /home && \
+  chmod -R g=u /etc/passwd /etc/group /home && \
+  chmod +x /entrypoint.sh
 
-USER 1001
 
+USER 10001
+ENV HOME=/home/user
+WORKDIR /projects
+ENTRYPOINT [ "/entrypoint.sh" ]
+CMD ["tail", "-f", "/dev/null"]
