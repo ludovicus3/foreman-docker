@@ -8,7 +8,7 @@ ENV FOREMAN_DOMAIN=example.com
 RUN \
   dnf upgrade -y && \
   dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
-  dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname redhat-rpm-config git gcc-c++ make bzip2 gettext tar libxml2-devel libcurl-devel ruby-devel postgresql-devel && \
+  dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} npm nc hostname redhat-rpm-config git git-lfs sudo gcc-c++ make bzip2 gettext tar libxml2-devel libcurl-devel ruby-devel postgresql-devel && \
   rpm --import https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-8 && \
   rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-0.37.0-1.el8.x86_64.rpm && \
   rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-devel-0.37.0-1.el8.x86_64.rpm && \
@@ -60,13 +60,17 @@ USER 0
 COPY --chown=0:0 entrypoint.sh /
 
 RUN \
-  useradd -u 10001 -G wheel,root -d /home/user --shell /bin/bash -m user && \
-  echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1) @\"\`$ '" >> /home/user/.bashrc && \
-  cp /etc/gitconfig /home/user/.gitconfig && \
-  chgrp -R 0 /home && \
-  chmod -R g=u /etc/passwd /etc/group /home && \
-  chmod +x /entrypoint.sh
-
+    # add user and configure it
+    useradd -u 10001 -G wheel,root -d /home/user --shell /bin/bash -m user && \
+    # Setup $PS1 for a consistent and reasonable prompt
+    echo "export PS1='\W \`git branch --show-current 2>/dev/null | sed -r -e \"s@^(.+)@\(\1\) @\"\`$ '" >> /home/user/.bashrc && \
+    # Copy the global git configuration to user config as global /etc/gitconfig
+    #  file may be overwritten by a mounted file at runtime
+    cp /etc/gitconfig /home/user/.gitconfig && \
+    # Set permissions on /etc/passwd and /home to allow arbitrary users to write
+    chgrp -R 0 /home && \
+    chmod -R g=u /etc/passwd /etc/group /home && \
+    chmod +x /entrypoint.sh
 
 USER 10001
 ENV HOME=/home/user
