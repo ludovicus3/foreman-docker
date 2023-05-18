@@ -1,13 +1,14 @@
 FROM quay.io/centos/centos:stream8 as base
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="12"
+ARG POSTGRESQL_VERSION="13"
 
 ENV FOREMAN_FQDN=foreman.example.com
 ENV FOREMAN_DOMAIN=example.com
 
 RUN \
   dnf upgrade -y && \
-  dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} -y && \
+  dnf module enable ruby:${RUBY_VERSION} nodejs:${NODEJS_VERSION} postgresql:${POSTGRESQL_VERSION} -y && \
   dnf install -y postgresql-libs ruby{,gems} rubygem-{rake,bundler} \
     npm nc hostname redhat-rpm-config git git-lfs postgresql \
     sudo gcc-c++ make bzip2 gettext tar vim \
