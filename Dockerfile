@@ -34,6 +34,7 @@ ARG FOREMAN_REX_VERSION="5.0.0"
 ARG KATELLO_VERSION="4.3.0"
 
 ENV RAILS_ENV=development
+ENV NODE_ENV=development
 ENV FOREMAN_APIPIE_LANGS=en
 ENV BUNDLER_SKIPPED_GROUPS="openid libvirt journald facter console"
 ENV DATABASE_URL=nulldb://nohost

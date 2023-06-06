@@ -19,6 +19,10 @@ if ! whoami &> /dev/null; then
   fi
 fi
 
+PLUGIN_NAME=$(basename $PROJECT_SOURCE)
+
+echo "gem '$PLUGIN_NAME', path: ENV['PROJECT_SOURCE']" > /foreman/bundler.d/${PLUGIN_NAME}.rb
+
 case "$@" in
   "orchestrator")
     bundle exec sidekiq -e ${RAILS_ENV} -r ${DYNFLOW_SIDEKIQ_SCRIPT} -c 1 -q dynflow_orchestrator
