@@ -1,4 +1,4 @@
-FROM ubi8:latest as base
+FROM registry.access.redhat.com/ubi8/ubi:latest as base
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="12"
 
