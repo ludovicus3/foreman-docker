@@ -1,4 +1,4 @@
-FROM quay.io/centos/centos:stream8 as base
+FROM ubi8:latest as base
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="12"
 
@@ -51,6 +51,7 @@ RUN \
   echo "Cloning from ${FOREMAN_VERSION}..." && \
   git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
 
+ARG PLUGINS="katello,~> 4.3.0:foreman-tasks,~> 5.2.3:foreman_webhooks:~>2.0.3:foreman_virt_who_configure,~> 0.5.9:foreman_templates,~> 9.1.0:foreman_remote_execution,~> 5.0.7:foreman_puppet,~> 2.0.6:foreman_ansible,~> 7.0.4"
 COPY --chown=1001:0 bundler.d bundler.d/
 
 RUN \
@@ -94,10 +95,9 @@ ENV RAILS_LOG_TO_STDOUT=true
 USER 1001
 WORKDIR ${HOME}
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
-RUN \
-  ln -sf /etc/foreman/database.yml ${HOME}/config/database.yml && \
-  ln -sf /etc/foreman/settings.yaml ${HOME}/config/settings.yaml && \
-  ln -sf /etc/foreman/plugins ${HOME}/config/settings.plugins.d && \
+COPY --chown=1001:0 settings.yaml ${HOME}/config/settings.yaml
+COPY --chown=1001:0 database.yml ${HOME}/config/database.yml
+COPY --chown=1001:0 plugins.d ${HOME}/config/settings.plugins.d
 
 RUN date -u > BUILD_TIME
 

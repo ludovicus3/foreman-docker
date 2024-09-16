@@ -1,0 +1,46 @@
+:unattended: <%= ENV.fetch('UNATTENDED') { 'true' } %>
+<% if ENV['UNATTENDED_URL'] -%>
+:unattended_url: <%= ENV['UNATTENDED_URL'] %>
+<% end -%>
+:require_ssl: true
+
+# SSL-settings
+:ssl_certificate: /etc/foreman/tls/tls.crt
+:ssl_ca_file: /etc/foreman/tls/ca.crt
+:ssl_priv_key: /etc/foreman/tls/tls.key
+
+# HSTS setting
+:hsts_enabled: true
+
+# Log settings for the current environment can be adjusted by adding them
+# here. For example, if you want to increase the log level.
+:logging:
+  :level: <%= EVN.fetch('LOG_LEVEL') { 'info' } %>
+
+<% unless ENV['CORS_DOMAINS'].empty? -%>
+# List of domains allowed for Cross-Origin Resource Sharing
+:cors_domains:
+<% ENV['CORS_DOMAINS'].split(',').each do |domain| -%>
+ - '<%= domain %>'
+<% end -%>
+
+<% end -%>
+
+<% end -%>
+# Individual logging types can be toggled on/off here
+:loggers:
+<% ENV.fetch('LOGGERS').split(',').each do |logger| -%>
+  :<%= logger %>:
+    :enabled: true
+<% end -%>
+
+:dynflow:
+  :redis_url: <%= ENV['REDIS_URL'] + '/6' %>
+
+:rails_cache_store:
+  :type: redis
+  :urls:
+    - <%= ENV['REDIS_URL'] + '/0' %>
+  :options:
+    :compress: true
+    :namespace: foreman
