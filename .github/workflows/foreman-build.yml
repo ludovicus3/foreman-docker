@@ -14,13 +14,18 @@ on:
 
 env:
   # Use docker.io for Docker Hub if empty
-  REGISTRY: ghcr.io
+  REGISTRY: quay.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME:  ${{ vars.QUAY_LOGIN }}/foreman
 
 
 jobs:
-  build:
+  plugin-version-matrix:
+    strategy:
+      matrix:
+        include:
+          - foreman_version: 3.1-stable
+            plugins: "katello,~> 4.3.0:foreman-tasks,~> 5.2.3:foreman_webhooks,~>2.0.3:foreman_virt_who_configure,>= 0.5.9,< 0.5.14:foreman_templates,~> 9.1.0:foreman_remote_execution,~> 5.0.7:foreman_puppet,~> 2.0.6:foreman_ansible,~> 7.0.4"
 
     runs-on: ubuntu-latest
     permissions:
@@ -54,8 +59,8 @@ jobs:
         uses: docker/login-action@v2.1.0
         with:
           registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ vars.QUAY_LOGIN }}
+          password: ${{ secrets.QUAY_PASSWORD }}
 
       # Extract metadata (tags, labels) for Docker
       # https://github.com/docker/metadata-action
@@ -73,7 +78,8 @@ jobs:
         with:
           context: foreman
           build-args: |
-            FOREMAN_VERSION=3.1-stable
+            FOREMAN_VERSION=${{ matrix.foreman_version }}
+            PLUGINS=${{ matrix.plugins }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
