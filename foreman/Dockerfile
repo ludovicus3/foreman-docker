@@ -51,7 +51,7 @@ RUN \
   echo "Cloning from ${FOREMAN_VERSION}..." && \
   git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
 
-ARG PLUGINS="katello,~> 4.3.0:foreman-tasks,~> 5.2.3:foreman_webhooks:~>2.0.3:foreman_virt_who_configure,~> 0.5.9:foreman_templates,~> 9.1.0:foreman_remote_execution,~> 5.0.7:foreman_puppet,~> 2.0.6:foreman_ansible,~> 7.0.4"
+ARG PLUGINS="katello,~> 4.3.0:foreman-tasks,~> 5.2.3:foreman_webhooks,~>2.0.3:foreman_virt_who_configure,~> 0.5.9:foreman_templates,~> 9.1.0:foreman_remote_execution,~> 5.0.7:foreman_puppet,~> 2.0.6:foreman_ansible,~> 7.0.4"
 COPY --chown=1001:0 bundler.d bundler.d/
 
 RUN \
