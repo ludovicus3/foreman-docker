@@ -22,16 +22,7 @@ jobs:
       matrix:
         include:
           - foreman_version: 3.1-stable
-            plugins: |
-              gem 'katello', '~> 4.3.0'
-              gem 'foreman-tasks', '~> 5.2.3'
-              gem 'foreman_webhooks', '~>2.0.3'
-              gem 'foreman_virt_who_configure', '>= 0.5.9', '< 0.5.14'
-              gem 'foreman_templates', '~> 9.1.0'
-              gem 'foreman_remote_execution', '~> 5.0.7'
-              gem 'foreman_puppet', '~> 2.0.6'
-              gem 'foreman_patch', '~> 1.1.3'
-              gem 'foreman_ansible', '~> 7.0.4'
+            plugins: katello,~> 4.3.0:foreman-tasks,~> 5.2.3:foreman_webhooks,~>2.0.3:foreman_virt_who_configure,>= 0.5.9,< 0.5.14:foreman_templates,~> 9.1.0:foreman_remote_execution,~> 5.0.7:foreman_puppet,~> 2.0.6:foreman_patch,~> 1.1.3:foreman_ansible,~> 7.0.4
 
     runs-on: ubuntu-latest
     permissions:
@@ -69,12 +60,6 @@ jobs:
           tags: |
             ${{ matrix.foreman_version }}
 
-      - name: Configure Plugins
-        run: |
-          cat <<EOF > bundler.d/plugins.rb
-          ${{ matrix.plugins }}
-          EOF
-
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
       - name: Build and push Docker image
@@ -84,6 +69,7 @@ jobs:
           context: foreman
           build-args: |
             FOREMAN_VERSION=${{ matrix.foreman_version }}
+            PLUGINS=${{ matrix.plugins }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
