@@ -29,7 +29,7 @@
 <% end -%>
 # Individual logging types can be toggled on/off here
 :loggers:
-<% ENV.fetch('LOGGERS').split(',').each do |logger| -%>
+<% ENV.fetch('LOGGERS', '').split(',').each do |logger| -%>
   :<%= logger %>:
     :enabled: true
 <% end -%>

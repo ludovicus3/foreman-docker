@@ -7,8 +7,8 @@
 
   :candlepin:
     :url: https://<%= CANDLEPIN_HOST %>:<%= CANDLEPIN_PORT %>/candlepin
-    :oauth_key: <%= CANDLEPIN_OAUTH_KEY %>
-    :oauth_secret: <%= CANDLEPIN_OAUTH_SECRET %>
+    :oauth_key: <%= ENV['CANDLEPIN_OAUTH_KEY'] %>
+    :oauth_secret: <%= ENV['CANDLEPIN_OAUTH_SECRET'] %>
     :ca_cert_file: /etc/foreman/tls/ca.crt
   
   :candlepin_events:
