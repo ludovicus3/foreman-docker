@@ -70,8 +70,8 @@ jobs:
             ${{ matrix.foreman_version }}
 
       - name: Configure Plugins
-        run:
-          - echo ${{ matrix.plugins }} > bundler.d/plugins.rb
+        run: |
+          echo ${{ matrix.plugins }} > bundler.d/plugins.rb
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
