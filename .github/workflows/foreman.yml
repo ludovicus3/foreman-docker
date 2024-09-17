@@ -71,7 +71,9 @@ jobs:
 
       - name: Configure Plugins
         run: |
-          echo ${{ matrix.plugins }} > bundler.d/plugins.rb
+          cat <<EOF > bundler.d/plugins.rb
+          ${{ matrix.plugins }}
+          EOF
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
