@@ -1,0 +1,9 @@
+:foreman-tasks:
+  :backup: false
+  :backup_dir: /var/lib/foreman/tasks-backup
+:cleanup:
+  :actions: []
+  :rules:
+    - :states: all
+      :after: 1y
+      :override_actions: true

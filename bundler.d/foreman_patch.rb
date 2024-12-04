@@ -1,1 +1,1 @@
-gem 'foreman_patch', '~> 1.1.5'
+gem 'foreman_patch', '~> 1.2.0'
