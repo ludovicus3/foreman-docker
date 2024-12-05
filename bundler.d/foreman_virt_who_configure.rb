@@ -1,1 +1,1 @@
-gem 'foreman_virt_who_configure', '~> 0.5.9', '< 0.5.23'
+gem 'foreman_virt_who_configure', '0.5.9'
