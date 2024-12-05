@@ -1,4 +1,4 @@
-FROM quay.io/centos/centos:stream8 as base
+FROM ubi8 as base
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="12"
 
@@ -23,8 +23,6 @@ RUN \
   chmod -R g=u $HOME
 
 COPY entrypoint.sh /usr/bin/
-COPY foreman /usr/bin/
-COPY dynflow /usr/bin/
 RUN chmod +x /usr/bin/*
 ENTRYPOINT ["entrypoint.sh"]
 
