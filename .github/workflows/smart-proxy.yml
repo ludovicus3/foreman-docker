@@ -1,4 +1,4 @@
-name: Docker
+name: Build Foreman Image
 on:
   push:
     branches: [ "develop", '*.*-stable' ]
@@ -10,7 +10,7 @@ env:
   # Use docker.io for Docker Hub if empty
   REGISTRY: quay.io
   # github.repository as <account>/<repo>
-  IMAGE_NAME: ${{ vars.QUAY_LOGIN }}/foreman
+  IMAGE_NAME: ${{ vars.QUAY_LOGIN }}/smart-proxy
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -42,13 +42,11 @@ jobs:
         id: build-and-push
         uses: docker/build-push-action@v4.0.0
         with:
-          context: .
+          context: smart-proxy
           build-args: |
-            FOREMAN_VERSION=${{ github.ref_name }}
+            SMART_PROXY_VERSION=${{ github.ref_name }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-

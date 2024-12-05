@@ -1,0 +1,9 @@
+---
+:ssl_ca_file: /tls/ca.crt
+:ssl_certificate: /tls/tls.crt
+:ssl_private_key: /tls/tls.key
+
+:foreman_url: <%= ENV['FOREMAN_INTERNAL_URL'] %>
+
+:log_file: STDOUT
+:log_level: <%= ENV.fetch('LOG_LEVEL') { 'INFO' } %>
