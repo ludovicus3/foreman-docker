@@ -21,13 +21,13 @@ FROM base as builder
 
 ARG SMART_PROXY_VERSION="develop"
 
-ENV BUNDLER_SKIPPED_GROUPS="test development journald"
+ENV BUNDLER_SKIPPED_GROUPS="test development journald libvirt"
 
 RUN \
   dnf install -y redhat-rpm-config git \
     gcc-c++ make bzip2 gettext tar \
     libxml2-devel libcurl-devel ruby-devel \ 
-    libvirt-devel krb5-devel && \
+    krb5-devel && \
   dnf clean all
 
 ARG HOME=/smart-proxy
@@ -63,12 +63,9 @@ ARG HOME=/smart-proxy
 
 USER 1001
 WORKDIR ${HOME}
-COPY --chown=1001:0 . ${HOME}/
-COPY --from=builder --chown=1001:0 ${HOME}/.bundle/config ${HOME}/.bundle/config
-COPY --from=builder --chown=1001:0 ${HOME}/Gemfile.lock ${HOME}/Gemfile.lock
-COPY --from=builder --chown=1001:0 ${HOME}/vendor/ruby ${HOME}/vendor/ruby
+COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
 COPY settings.yml ${HOME}/config/settings.yml
-RUN find ${HOME}/config/settings.d -name "*.example" -exec sh -c 'mv "$1" "${1%.example}"' _ {} \; && \
+RUN find ${HOME}/config/settings.d -name "*.example" -exec sh -c 'mv "$1" "${1%.example}"' _ {} \;
 
 RUN date -u > BUILD_TIME
 

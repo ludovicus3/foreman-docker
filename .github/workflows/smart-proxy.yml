@@ -1,4 +1,4 @@
-name: Build Foreman Image
+name: Build Smart Proxy Image
 on:
   push:
     branches: [ "develop", '*.*-stable' ]
