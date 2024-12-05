@@ -49,7 +49,7 @@ WORKDIR $HOME
 
 RUN \
   echo "Cloning from ${FOREMAN_VERSION}..." && \
-  git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
+  git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git ${HOME}
 
 COPY --chown=1001:0 bundler.d bundler.d/
 
