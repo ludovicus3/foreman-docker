@@ -1,12 +1,12 @@
 # Base container that is used for both building and running the app
-FROM registry.access.redhat.com/ubi8 as base
+FROM registry.access.redhat.com/ubi8/ubi-minimal as base
 ARG RUBY_VERSION="2.7"
 
 RUN \
-  dnf upgrade -y && \
-  dnf module enable ruby:${RUBY_VERSION} -y && \
-  dnf install ruby{,gems} rubygem-{rake,bundler} -y && \
-  dnf clean all
+  microdnf upgrade -y && \
+  microdnf module enable ruby:${RUBY_VERSION} -y && \
+  microdnf install shadow-utils ruby{,gems} rubygem-{rake,bundler} -y && \
+  microdnf clean all
 
 ARG HOME=/smart-proxy
 WORKDIR $HOME
@@ -24,11 +24,11 @@ ARG SMART_PROXY_VERSION="develop"
 ENV BUNDLER_SKIPPED_GROUPS="test development journald libvirt"
 
 RUN \
-  dnf install -y redhat-rpm-config git \
+  microdnf install -y redhat-rpm-config git \
     gcc-c++ make bzip2 gettext tar \
     libxml2-devel libcurl-devel ruby-devel \ 
-    krb5-devel && \
-  dnf clean all
+    krb5-devel findutils && \
+  microdnf clean all
 
 ARG HOME=/smart-proxy
 USER 1001
@@ -55,6 +55,8 @@ RUN chgrp -R 0 ${HOME} && \
 
 USER 1001
 
+RUN find ${HOME}/config/settings.d -name "*.example" -exec sh -c 'mv "$1" "${1%.example}"' _ {} \;
+
 FROM base
 
 USER 0
@@ -65,7 +67,6 @@ USER 1001
 WORKDIR ${HOME}
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
 COPY settings.yml ${HOME}/config/settings.yml
-RUN find ${HOME}/config/settings.d -name "*.example" -exec sh -c 'mv "$1" "${1%.example}"' _ {} \;
 
 RUN date -u > BUILD_TIME
 
