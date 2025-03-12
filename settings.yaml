@@ -10,7 +10,7 @@
 # Log settings for the current environment can be adjusted by adding them
 # here. For example, if you want to increase the log level.
 :logging:
-  :level: <%= EVN.fetch('LOG_LEVEL') { 'info' } %>
+  :level: <%= ENV.fetch('LOG_LEVEL') { 'info' } %>
 
 <% unless ENV['CORS_DOMAINS'].empty? %>
 # List of domains allowed for Cross-Origin Resource Sharing
