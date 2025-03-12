@@ -6,7 +6,7 @@ unless ENV['PLUGINS'].empty?
 end
 
 source = ENV['PROJECT_SOURCE']
-unless source.blank?
+unless source.nil? or source.empty?
   Dir.glob(File.join(source, '**', '*.gemspec')) do |file|
     spec = Gem::Specification.load(file)
     gem spec.name, path: File.dirname(file)
