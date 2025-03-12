@@ -81,6 +81,7 @@ RUN \
 
 USER 0
 RUN \
+  chown -R 1001 ${HOME} && \
   chgrp -R 0 ${HOME} && \
   chmod -R g=u ${HOME}
 
@@ -90,10 +91,8 @@ ARG HOME=/home/foreman
 ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
-
-USER 1001
 WORKDIR ${HOME}
-COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
+
 COPY --chown=1001:0 settings.yaml ${HOME}/config/settings.yaml
 COPY --chown=1001:0 database.yml ${HOME}/config/database.yml
 COPY --chown=1001:0 plugins.d ${HOME}/config/settings.plugins.d
