@@ -43,7 +43,7 @@ RUN \
   dnf clean all
 
 ENV DATABASE_URL=nulldb://nohost
-ARG APP_DIR=/home/foreman
+ARG APP_DIR=/foreman
 USER 1001
 WORKDIR $APP_DIR
 
