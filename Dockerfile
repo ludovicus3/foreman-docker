@@ -80,7 +80,7 @@ RUN \
   bundle install
 
 USER 0
-RUN chmod g=u /etc/passwd
+RUN chmod -R g=u /etc/passwd /etc/group /home
 RUN \
   chown -R 1001 ${HOME} && \
   chgrp -R 0 ${HOME} && \
