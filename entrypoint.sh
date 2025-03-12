@@ -19,9 +19,7 @@ if ! whoami &> /dev/null; then
   fi
 fi
 
-PLUGIN_NAME=$(basename $PROJECT_SOURCE)
 
-echo "gem '$PLUGIN_NAME', path: ENV['PROJECT_SOURCE']" > /foreman/bundler.d/${PLUGIN_NAME}.rb
 
 case "$@" in
   "orchestrator")
