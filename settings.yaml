@@ -18,6 +18,7 @@
 <% ENV['CORS_DOMAINS'].split(',').each do |domain| %>
  - '<%= domain %>'
 <% end %>
+<% end %>
 
 # Individual logging types can be toggled on/off here
 :loggers:
