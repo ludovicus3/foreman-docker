@@ -13,14 +13,14 @@ RUN \
   rpm -i https://dl.fedoraproject.org/pub/epel/8/Everything/x86_64/Packages/q/qpid-proton-c-0.37.0-1.el8.x86_64.rpm && \
   dnf clean all
 
-ARG HOME=/home/foreman
-WORKDIR $HOME
+ARG APP_DIR=/foreman
+WORKDIR $APP_DIR
 
 RUN \
   groupadd -r foreman -f -g 0 && \
-  useradd -u 1001 -r -g foreman -d $HOME -s /sbin/nologin -c "Foreman Application User" foreman && \
-  chown -R 1001:0 $HOME && \
-  chmod -R g=u $HOME
+  useradd -u 1001 -r -g foreman -d $APP_DIR -s /sbin/nologin -c "Foreman Application User" foreman && \
+  chown -R 1001:0 $APP_DIR && \
+  chmod -R g=u $APP_DIR
 
 COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/entrypoint.sh
@@ -43,9 +43,9 @@ RUN \
   dnf clean all
 
 ENV DATABASE_URL=nulldb://nohost
-ARG HOME=/home/foreman
+ARG APP_DIR=/home/foreman
 USER 1001
-WORKDIR $HOME
+WORKDIR $APP_DIR
 
 RUN \
   echo "Cloning from ${FOREMAN_VERSION}..." && \
@@ -80,23 +80,22 @@ RUN \
   bundle install
 
 USER 0
-RUN chmod -R g=u /etc/passwd /etc/group /home
+
+COPY --chown=1001:0 settings.yaml ${APP_DIR}/config/settings.yaml
+COPY --chown=1001:0 database.yml ${APP_DIR}/config/database.yml
+COPY --chown=1001:0 plugins.d ${APP_DIR}/config/settings.plugins.d
+
+RUN 
 RUN \
-  chown -R 1001 ${HOME} && \
-  chgrp -R 0 ${HOME} && \
-  chmod -R g=u ${HOME}
+  chown -R 1001 ${APP_DIR} && \
+  chgrp -R 0 ${APP_DIR} && \
+  chmod -R g=u /etc/passwd /etc/group ${APP_DIR}
 
 USER 1001
 
-ARG HOME=/home/foreman
-ENV RAILS_ENV=production
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
-WORKDIR ${HOME}
-
-COPY --chown=1001:0 settings.yaml ${HOME}/config/settings.yaml
-COPY --chown=1001:0 database.yml ${HOME}/config/database.yml
-COPY --chown=1001:0 plugins.d ${HOME}/config/settings.plugins.d
+WORKDIR ${APP_DIR}
 
 RUN date -u > BUILD_TIME
 
