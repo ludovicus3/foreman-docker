@@ -49,8 +49,8 @@ RUN \
   apt-get autoremove -y; \
   rm -rf /var/lib/apt/lists/*
 
-ADD https://raw.githubusercontent.com/theforeman/puppet-puppetserver_foreman/refs/head/master/files/enc.rb /etc/puppetlabs/puppet/node.rb
-ADD https://raw.githubusercontent.com/theforeman/puppet-puppetserver_foreman/refs/head/master/files/reports.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/reports/foreman.rb
+ADD node.rb /etc/puppetlabs/puppet/node.rb
+ADD foreman.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/reports/foreman.rb
 
 COPY logback.xml request-logging.xml /etc/puppetlabs/puppetserver/
 COPY foreman.yaml.erb /etc/puppetlabs/puppet/foreman.yaml
