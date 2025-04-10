@@ -44,7 +44,7 @@ RUN \
   rm -f /puppet-release-bookworm.deb; \
   chmod +x /docker-entrypoint.sh /docker-entrypoint.d/*.sh; \
   apt-get update; \
-  apt-get upgrade; \
+  apt-get upgrade -y; \
   apt-get install -y --no-install-recommends ca-certificates openjdk-17-jre-headless puppetserver dumb-init; \
   apt-get autoremove -y; \
   rm -rf /var/lib/apt/lists/*
