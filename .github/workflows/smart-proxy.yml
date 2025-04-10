@@ -2,8 +2,8 @@ name: Build Smart Proxy Image
 on:
   push:
     branches: [ "develop", '*.*-stable' ]
-    # Publish semver tags as releases.
-    tags: [ '*.*-stable' ]
+      paths:
+        - smart-proxy/**/*
   pull_request:
     branches: [ "develop" ]
 env:

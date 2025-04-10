@@ -1,0 +1,46 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: foreman
+  namespace: <%= namespace %>
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foreman
+  template:
+    metadata:
+      labels:
+        app: foreman
+    spec:
+      volumes:
+        - name: uploads
+          persistentVolumeClaim:
+            claimName: foreman-uploads
+      containers:
+        - name: foreman
+          command:
+            - foreman
+          env:
+            - name: RAILS_MAX_THREADS
+              value: '5'
+            - name: RAILS_ENV
+              value: production
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          imagePullPolicy: Always
+          image: 'quay.io/ludovicus/foreman:3.1-stable'
+          resources: {}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      dnsPolicy: ClusterFirst
+      securityContext: {}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 25%
+      maxSurge: 25%
+  revisionHistoryLimit: 10
+  progressDeadlineSeconds: 600

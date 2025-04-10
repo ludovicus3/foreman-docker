@@ -2,8 +2,8 @@ name: Build Foreman Image
 on:
   push:
     branches: [ "develop", '*.*-stable' ]
-    # Publish semver tags as releases.
-    tags: [ '*.*-stable' ]
+      paths:
+        - foreman/**/*
   pull_request:
     branches: [ "develop" ]
 env:

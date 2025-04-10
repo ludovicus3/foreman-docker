@@ -1,9 +1,10 @@
 :foreman-tasks:
-  :backup: false
-  :backup_dir: /var/lib/foreman/tasks-backup
-:cleanup:
-  :actions: []
-  :rules:
-    - :states: all
-      :after: 1y
-      :override_actions: true
+  :backup:
+    :backup_deleted_tasks: <%= ENV.fetch('BACKUP_DELETED_TASKS') { 'false' } %>
+    :backup_dir: <%= ENV.fetch('BACKUP_DIRECTORY') { '/var/lib/foreman/tasks-backup' } %>
+  :cleanup:
+    :actions: []
+    :rules:
+      - :states: all
+        :after: 1y
+        :override_actions: true
