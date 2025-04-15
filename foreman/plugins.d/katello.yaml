@@ -1,4 +1,3 @@
----
 :katello:
   :rest_client_timeout: <%= ENV.fetch('REST_CLIENT_TIMEOUT') { 3600 } %>
 
@@ -6,14 +5,16 @@
     :enabled: <%= ENV.fetch('KATELLO_EVENTS') { 'false' } %>
 
   :candlepin:
-    :url: https://<%= ENV.fetch('CANDLEPIN_HOST') { 'localhost' } %>:<%= ENV.fetch('CANDLEPIN_PORT') { 8443 } %>/candlepin
-    :oauth_key: <%= ENV['CANDLEPIN_OAUTH_KEY'] %>
-    :oauth_secret: <%= ENV['CANDLEPIN_OAUTH_SECRET'] %>
+    :url: https://<%= ENV.fetch('CANDLEPIN_HOST') { 'localhost' } %>/candlepin
+    :oauth_key: <%= ENV.fetch('CANDLEPIN_OAUTH_KEY') { File.read('/etc/foreman/oauth_key') } %>
+    :oauth_secret: <%= ENV.fetch('CANDLEPIN_OAUTH_SECRET') { File.read('/etc/foreman/oauth_secret') } %>
     :ca_cert_file: /etc/foreman/tls/ca.crt
-  
+
   :candlepin_events:
-    :broker_host: <%= ENV.fetch('CANDLEPIN_BROKER_HOST') { 'localhost' } %>
-    :broker_port: <%= ENV.fetch('CANDLEPIN_BROKER_PORT') { 61613 } %>
+    :broker_host: <%= ENV.fetch('CANDLEPIN_EVENT_BROKER') { 'localhost' } %>
     :ssl_cert_file: /etc/foreman/tls/tls.crt
     :ssl_key_file: /etc/foreman/tls/tls.key
     :ssl_ca_file: /etc/foreman/tls/ca.crt
+
+  :agent:
+    :enabled: false

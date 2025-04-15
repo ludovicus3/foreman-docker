@@ -1,0 +1,39 @@
+candlepin.consumer_system_name_pattern=.+
+candlepin.environment_content_filtering=true
+candlepin.auth.basic.enable=false
+candlepin.auth.trusted.enable=false
+
+candlepin.audit.hornetq.config_path=/etc/candlepin/broker.xml
+
+candlepin.auth.oauth.enable=true
+candlepin.auth.oauth.consumer.katello.secret=<%= candlepin.katello.oauth_secret %>
+
+module.config.adapter_module=org.candlepin.katello.KatelloModule
+
+candlepin.ca_key=/etc/candlepin/certs/candlepin-ca.key
+candlepin.ca_cert=/etc/candlepin/certs/candlepin-ca.crt
+candlepin.crl.file=/var/lib/candlepin/candlepin-crl.crl
+
+candlepin.async.jobs.ExpiredPoolsCleanupJob.schedule=0 0 0 * * ?
+
+log4j.logger.org.hibernate.internal.SessionImpl=ERROR
+
+jpa.config.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+jpa.config.hibernate.connection.driver_class=org.postgresql.Driver
+jpa.config.hibernate.connection.url=<%= candlepin.jdbc_url %>
+jpa.config.hibernate.hbm2ddl.auto=validate
+jpa.config.hibernate.connection.username=<%= candlepin.cpdb_username %>
+jpa.config.hibernate.connection.password=<%= candlepin.cpdb_password %>
+
+org.quartz.jobStore.misfireThreshold=60000
+org.quartz.jobStore.useProperties=false
+org.quartz.jobStore.dataSource=myDS
+org.quartz.jobStore.tablePrefix=QRTZ_
+org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
+org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+
+org.quartz.dataSource.myDS.driver=org.postgresql.Driver
+org.quartz.dataSource.myDS.URL=<%= candlepin.jdbc_url %>
+org.quartz.dataSource.myDS.user=<%= candlepin.cpdb_username %>
+org.quartz.dataSource.myDS.password=<% candlepin.cpdb_password %>
+org.quartz.dataSource.myDS.maxConnections=5

@@ -23,7 +23,7 @@ RUN \
   chmod -R g=u $HOME
 
 COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
+RUN chmod +x /usr/bin/*
 ENTRYPOINT ["entrypoint.sh"]
 
 FROM base as builder
@@ -49,7 +49,7 @@ WORKDIR $HOME
 
 RUN \
   echo "Cloning from ${FOREMAN_VERSION}..." && \
-  git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git .
+  git clone --branch ${FOREMAN_VERSION} https://github.com/theforeman/foreman.git ${HOME}
 
 ARG PLUGINS=""
 COPY --chown=1001:0 bundler.d bundler.d/
@@ -69,7 +69,7 @@ RUN \
 RUN \
   make -C locale all-mo && \
   mv -v db/schema.rb.nulldb db/schema.rb && \
-  bundle exec rake assets:clean assets:precompile
+  bundle exec rake assets:clean assets:precompile apipie:cache:index
 
 RUN \
   npm install --no-optional && \
@@ -78,11 +78,6 @@ RUN \
   rm -rf public/webpack/stats.json ./node_modules vendor/ruby/*/cache vendor/ruby/*/gems/*/node_modules bundler.d/nulldb.rb db/schema.rb && \
   bundle config without "${BUNDLER_SKIPPED_GROUPS} assets" && \
   bundle install
-
-USER 0
-RUN \
-  chgrp -R 0 ${HOME} && \
-  chmod -R g=u ${HOME}
 
 USER 1001
 FROM base
@@ -94,10 +89,15 @@ ENV RAILS_LOG_TO_STDOUT=true
 
 USER 1001
 WORKDIR ${HOME}
+
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
-COPY --chown=1001:0 settings.yaml ${HOME}/config/settings.yaml
-COPY --chown=1001:0 database.yml ${HOME}/config/database.yml
-COPY --chown=1001:0 plugins.d ${HOME}/config/settings.plugins.d
+COPY settings.yaml ${HOME}/config/settings.yaml
+COPY database.yml ${HOME}/config/database.yml
+COPY plugins.d ${HOME}/config/settings.plugins.d
+
+RUN \
+  chgrp -R 0 ${HOME} && \
+  chmod -R g=u ${HOME}
 
 RUN date -u > BUILD_TIME
 

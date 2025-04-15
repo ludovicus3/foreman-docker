@@ -17,14 +17,16 @@
 :logging:
   :level: <%= EVN.fetch('LOG_LEVEL') { 'info' } %>
 
-<% if ENV['CORS_DOMAINS'] -%>
+<% unless ENV['CORS_DOMAINS'].empty? -%>
 # List of domains allowed for Cross-Origin Resource Sharing
 :cors_domains:
 <% ENV['CORS_DOMAINS'].split(',').each do |domain| -%>
  - '<%= domain %>'
 <% end -%>
+
 <% end -%>
 
+<% end -%>
 # Individual logging types can be toggled on/off here
 :loggers:
 <% ENV.fetch('LOGGERS', '').split(',').each do |logger| -%>
@@ -32,7 +34,6 @@
     :enabled: true
 <% end -%>
 
-<% if ENV['REDIS_URL'] %>
 :dynflow:
   :redis_url: <%= ENV['REDIS_URL'] + '/6' %>
 
@@ -43,4 +44,3 @@
   :options:
     :compress: true
     :namespace: foreman
-<% end %>
