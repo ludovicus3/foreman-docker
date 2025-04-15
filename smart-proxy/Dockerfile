@@ -1,20 +1,24 @@
 # Base container that is used for both building and running the app
-FROM registry.access.redhat.com/ubi9/ubi-minimal as base
-ARG RUBY_VERSION="2.7"
+ARG RUBY_VERSION="3.1"
+FROM docker.io/ruby:${RUBY_VERSION}-slim-bookworm AS base
 
 RUN \
-  microdnf upgrade -y && \
-  microdnf module enable ruby:${RUBY_VERSION} -y && \
-  microdnf install shadow-utils ruby{,gems} rubygem-{rake,bundler} -y && \
-  microdnf clean all
+  set -eux; \
+  export PACKAGES="libxml2 libkrb5-3"; \
+  apt-get update; \
+  apt-get upgrade -y; \
+  apt-get install -y --no-install-recommends ${PACKAGES}; \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/*
 
-ARG HOME=/smart-proxy
+ENV HOME=/smart-proxy
 WORKDIR $HOME
-RUN groupadd -r smart-proxy -f -g 0 && \
-    useradd -u 1001 -r -g smart-proxy -d $HOME -s /sbin/nologin \
-    -c "Smart Proxy Application User" smart-proxy && \
-    chown -R 1001:0 $HOME && \
-    chmod -R g=u ${HOME}
+RUN \
+  set -eux; \
+  groupadd -r smart-proxy -f -g 0; \
+  useradd -u 1001 -g smart-proxy -d ${HOME} -s /sbin/nologin -c "Smart Proxy Daemon User" smart-proxy; \
+  chown -R 1001:0 ${HOME}; \
+  chmod -R g=u ${HOME}
 
 # Temp container that download gems/npms and compile assets etc
 FROM base as builder
@@ -24,34 +28,41 @@ ARG SMART_PROXY_VERSION="develop"
 ENV BUNDLER_SKIPPED_GROUPS="test development journald libvirt"
 
 RUN \
-  microdnf install -y redhat-rpm-config git \
-    gcc-c++ make bzip2 gettext tar \
-    libxml2-devel libcurl-devel ruby-devel \ 
-    krb5-devel findutils && \
-  microdnf clean all
+  set -eux; \
+  apt-get update; \
+  apt-get install -y --no-install-recommends git g++ make bzip2 gettext tar libxml2-dev libkrb5-dev; \
+  apt-get clean; \
+  rm -rf /var/lib/apt/lists/*
 
-ARG HOME=/smart-proxy
+ENV HOME=/smart-proxy
 USER 1001
 WORKDIR $HOME
 
 RUN \
-  echo "Cloning from ${SMART_PROXY_VERSION}..." && \
-  git clone --branch ${SMART_PROXY_VERSION} https://github.com/theforeman/smart-proxy.git ${HOME}
+  echo "Cloning from ${SMART_PROXY_VERSION}..."; \
+  git clone --branch ${SMART_PROXY_VERSION} https://github.com/theforeman/smart-proxy.git ${HOME}; \
+  rm -rf ${HOME}/.git
 
-RUN bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}" && \
-  bundle config set --local clean true && \
-  bundle config set --local path vendor && \
-  bundle config set --local jobs 5 && \
+RUN \
+  set -eux; \
+  bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+  bundle config set --local clean true; \
+  bundle config set --local path vendor; \
+  bundle config set --local jobs 5; \
   bundle config set --local retry 3
-RUN bundle install && \
-  bundle binstubs --all && \
-  rm -rf vendor/ruby/*/cache/*.gem && \
-  find vendor/ruby/*/gems -name "*.c" -delete && \
+RUN \
+  set -eux; \
+  bundle install; \
+  bundle binstubs --all; \
+  rm -rf vendor/ruby/*/cache/*.gem; \
+  find vendor/ruby/*/gems -name "*.c" -delete; \
   find vendor/ruby/*/gems -name "*.o" -delete
 
 USER 0
-RUN chgrp -R 0 ${HOME} && \
-    chmod -R g=u ${HOME}
+RUN \
+  set -eux; \
+  chgrp -R 0 ${HOME}; \
+  chmod -R g=u ${HOME}
 
 USER 1001
 
@@ -59,14 +70,23 @@ RUN find ${HOME}/config/settings.d -name "*.example" -exec sh -c 'mv "$1" "${1%.
 
 FROM base
 
-USER 0
-
-ARG HOME=/smart-proxy
-
 USER 1001
+
+ENV BUNDLER_SKIPPED_GROUPS="test development journald libvirt"
+ENV HOME=/smart-proxy
+
 WORKDIR ${HOME}
+
 COPY --from=builder --chown=1001:0 ${HOME} ${HOME}
 COPY settings.yml ${HOME}/config/settings.yml
+
+RUN \
+  set -eux; \
+  bundle config set --local without "${BUNDLER_SKIPPED_GROUPS}"; \
+  bundle config set --local clean true; \
+  bundle config set --local path vendor; \
+  bundle config set --local jobs 5; \
+  bundle config set --local retry 3
 
 RUN date -u > BUILD_TIME
 
