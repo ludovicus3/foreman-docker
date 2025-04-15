@@ -1,5 +1,5 @@
 # Base container that is used for both building and running the app
-FROM registry.access.redhat.com/ubi8/ubi-minimal as base
+FROM registry.access.redhat.com/ubi9/ubi-minimal as base
 ARG RUBY_VERSION="2.7"
 
 RUN \

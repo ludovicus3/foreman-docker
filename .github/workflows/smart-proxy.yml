@@ -1,9 +1,11 @@
 name: Build Smart Proxy Image
 on:
   push:
-    branches: [ "develop", '*.*-stable' ]
-      paths:
-        - smart-proxy/**/*
+    branches:
+      - develop
+      - *.*-stable
+    paths:
+      - smart-proxy/**/*
   pull_request:
     branches: [ "develop" ]
 env:

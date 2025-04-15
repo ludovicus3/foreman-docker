@@ -1,9 +1,11 @@
 name: Build Foreman Image
 on:
   push:
-    branches: [ "develop", '*.*-stable' ]
-      paths:
-        - foreman/**/*
+    branches:
+      - develop
+      - '*.*-stable'
+    paths:
+      - foreman/**/*
   pull_request:
     branches: [ "develop" ]
 env:

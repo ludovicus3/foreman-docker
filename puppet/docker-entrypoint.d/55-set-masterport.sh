@@ -7,6 +7,6 @@ hocon() {
 }
 
 if test -n "$PUPPETSERVER_PORT"; then
-  hocon /etc/puppetlabs/puppetserver/conf.d/webserver.conf set webserver.ssl-port $PUPPETSERVER_PORT
+  hocon -f /etc/puppetlabs/puppetserver/conf.d/webserver.conf set webserver.ssl-port $PUPPETSERVER_PORT
   puppet config set serverport $PUPPETSERVER_PORT --section main
 fi

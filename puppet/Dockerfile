@@ -45,7 +45,7 @@ RUN \
   chmod +x /docker-entrypoint.sh /docker-entrypoint.d/*.sh; \
   apt-get update; \
   apt-get upgrade -y; \
-  apt-get install -y --no-install-recommends ca-certificates openjdk-17-jre-headless puppetserver dumb-init; \
+  apt-get install -y --no-install-recommends ca-certificates openjdk-17-jre-headless puppetserver dumb-init netbase; \
   apt-get autoremove -y; \
   rm -rf /var/lib/apt/lists/*
 
@@ -56,9 +56,14 @@ COPY logback.xml request-logging.xml /etc/puppetlabs/puppetserver/
 COPY foreman.yaml.erb /etc/puppetlabs/puppet/foreman.yaml
 
 RUN \
-  mkdir -p /opt/puppetlabs/server/data/puppetserver/yaml/{facts,foreman,node}
+  mkdir -p /opt/puppetlabs/server/data/puppetserver/yaml/{facts,foreman,node}; \
+  chown -R puppet:puppet /opt/puppetlabs /etc/puppetlabs; \
+  chmod -R g=u /opt/puppetlabs /etc/puppetlabs
 
-USER 999
+EXPOSE 8140
+
+VOLUME /etc/puppetlabs/code
+VOLUME /etc/puppetlabs/puppetserver/ca
 
 ENTRYPOINT ["dumb-init", "/docker-entrypoint.sh"]
 CMD ["foreground"]

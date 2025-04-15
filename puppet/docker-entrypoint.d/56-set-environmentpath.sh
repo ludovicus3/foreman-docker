@@ -2,4 +2,4 @@
 
 set -e
 
-puppet config set environmentpath $ENVIRONMENTPATH --section server
+puppet config set environmentpath "${ENVIRONMENT_PATH}" --section server
