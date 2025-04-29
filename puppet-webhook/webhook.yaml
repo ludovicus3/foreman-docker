@@ -1,0 +1,20 @@
+server:
+  protected: false
+  port: 4000
+  tls:
+    enabled: false
+    certificate: /etc/tls/tls.crt
+    key: /etc/tls/tls.key
+  queue:
+    enabled: true
+    max_concurrent_jobs: 10
+    max_history_items: 20
+chatops:
+  enabled: false
+r10k:
+  command_path: /usr/local/bin/r10k
+  config_path: /etc/voxpupuli/r10k.yaml
+  verbose: true
+  allow_uppercase: false
+  default_branch: ${DEFAULT_BRANCH}
+  blocked_branches: ${BLOCKED_BRANCHES}
