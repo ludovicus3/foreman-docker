@@ -1,1 +1,1 @@
-gem 'foreman_discovery', '~> 19.0.5'
+gem 'foreman_discovery', '~> 21.0.0'

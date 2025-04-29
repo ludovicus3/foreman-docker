@@ -1,1 +1,1 @@
-gem 'katello', '~> 4.3.0'
+gem 'katello', '~> 4.5.0'

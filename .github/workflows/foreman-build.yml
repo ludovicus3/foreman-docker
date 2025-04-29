@@ -46,7 +46,7 @@ jobs:
         with:
           context: foreman
           build-args: |
-            FOREMAN_VERSION=${{ github.ref_name }}
+            FOREMAN_VERSION=3.3-stable
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
