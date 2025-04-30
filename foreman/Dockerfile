@@ -1,4 +1,4 @@
-FROM registry.access.redhat.com/ubi8/ubi:latest as base
+FROM registry.access.redhat.com/ubi8/ubi:latest AS base
 ARG RUBY_VERSION="2.7"
 ARG NODEJS_VERSION="12"
 
@@ -26,7 +26,7 @@ COPY entrypoint.sh /usr/bin/
 RUN chmod +x /usr/bin/*
 ENTRYPOINT ["entrypoint.sh"]
 
-FROM base as builder
+FROM base AS builder
 
 ARG FOREMAN_VERSION="develop"
 
@@ -96,9 +96,13 @@ COPY settings.yaml ${HOME}/config/settings.yaml
 COPY database.yml ${HOME}/config/database.yml
 COPY plugins.d ${HOME}/config/settings.plugins.d
 
+USER 0
+
 RUN \
   chgrp -R 0 ${HOME}; \
   chmod -R g=u ${HOME}
+
+USER 1001
 
 RUN date -u > BUILD_TIME
 
