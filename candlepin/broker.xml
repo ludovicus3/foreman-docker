@@ -7,12 +7,7 @@
 
     <acceptors>
       <acceptor name="in-vm">vm://0</acceptor>
-
-      <!--
-      <acceptor name="stomp">
-        tcp://0.0.0.0:61613?protocols=STOMP;useEpoll=false;sslEnabled=true;trustStorePath=/etc/candlepin/certs/truststore;trustStorePassword=r4vh82i3vt7WnUz7phbUJjtG;keyStorePath=/etc/candlepin/certs/keystore;keyStorePassword=JgouELg5KHILstijq7FRRC7v;needClientAuth=true
-      </acceptor>
-      -->
+      <acceptor name="stomp">tcp://0.0.0.0:61613?protocols=STOMP;useEpoll=false;sslEnabled=true;needClientAuth=true</acceptor>
     </acceptors>
 
     <security-enabled>true</security-enabled>

@@ -4,9 +4,11 @@ candlepin.auth.basic.enable=false
 candlepin.auth.trusted.enable=false
 
 candlepin.audit.hornetq.config_path=/etc/candlepin/broker.xml
+#candlepin.audit.hornetq.embedded=false
+#candlepin.autit.hornetq.broker_url=${BROKER_URL}
 
 candlepin.auth.oauth.enable=true
-candlepin.auth.oauth.consumer.katello.secret=<%= candlepin.katello.oauth_secret %>
+candlepin.auth.oauth.consumer.katello.secret=${KATELLO_OAUTH_SECRET}
 
 module.config.adapter_module=org.candlepin.katello.KatelloModule
 
@@ -20,10 +22,11 @@ log4j.logger.org.hibernate.internal.SessionImpl=ERROR
 
 jpa.config.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 jpa.config.hibernate.connection.driver_class=org.postgresql.Driver
-jpa.config.hibernate.connection.url=<%= candlepin.jdbc_url %>
 jpa.config.hibernate.hbm2ddl.auto=validate
-jpa.config.hibernate.connection.username=<%= candlepin.cpdb_username %>
-jpa.config.hibernate.connection.password=<%= candlepin.cpdb_password %>
+jpa.config.hibernate.connection.url=${POSTGRES_URL}
+jpa.config.hibernate.connection.username=${POSTGRES_USER}
+jpa.config.hibernate.connection.password=${POSTGRES_PASSWORD}
+
 
 org.quartz.jobStore.misfireThreshold=60000
 org.quartz.jobStore.useProperties=false
@@ -33,7 +36,7 @@ org.quartz.jobStore.class=org.quartz.impl.jdbcjobstore.JobStoreTX
 org.quartz.jobStore.driverDelegateClass=org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
 
 org.quartz.dataSource.myDS.driver=org.postgresql.Driver
-org.quartz.dataSource.myDS.URL=<%= candlepin.jdbc_url %>
-org.quartz.dataSource.myDS.user=<%= candlepin.cpdb_username %>
-org.quartz.dataSource.myDS.password=<% candlepin.cpdb_password %>
+org.quartz.dataSource.myDS.URL=${POSTGRES_URL}
+org.quartz.dataSource.myDS.user=${POSTGRES_USER}
+org.quartz.dataSource.myDS.password=${POSTGRES_PASSWORD}
 org.quartz.dataSource.myDS.maxConnections=5
